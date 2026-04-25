@@ -1,3 +1,0 @@
-/workspace/android/app/.cxx/Debug/6v4vp331/armeabi-v7a/CMakeFiles/assoc_android.dir
-/workspace/android/app/.cxx/Debug/6v4vp331/armeabi-v7a/CMakeFiles/edit_cache.dir
-/workspace/android/app/.cxx/Debug/6v4vp331/armeabi-v7a/CMakeFiles/rebuild_cache.dir

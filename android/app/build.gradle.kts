@@ -16,7 +16,12 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags += listOf("-std=c++17", "-Wall", "-Wextra", "-Werror")
+                arguments += listOf("-DANDROID_STL=c++_shared")
             }
+        }
+
+        ndk {
+            abiFilters += listOf("arm64-v8a")
         }
     }
 
