@@ -5,6 +5,23 @@ Node.js Slack bot server for talking to an AI assistant from Slack.
 The bot uses Slack Socket Mode, so local development does not need a public
 webhook URL.
 
+## Quick setup
+
+Use `slack-app-manifest.yml` when creating or updating the Slack app. In Slack:
+
+1. Open **api.slack.com/apps**.
+2. Open your app.
+3. Go to **App Manifest**.
+4. Paste the contents of `slack-app-manifest.yml`.
+5. Save changes.
+6. Go to **OAuth & Permissions** and click **Install to Workspace** or
+   **Reinstall to Workspace**.
+
+After installation, copy:
+
+- **Bot User OAuth Token** into `SLACK_BOT_TOKEN`. This token starts with `xoxb-`.
+- **App-Level Token** into `SLACK_APP_TOKEN`. This token starts with `xapp-`.
+
 ## Required Slack tokens
 
 Create or open the Slack app, then configure:
@@ -31,6 +48,9 @@ Create or open the Slack app, then configure:
    - Subscribe to bot events:
      - `app_mention`
      - `message.im`
+
+The app-level token is created under **Basic Information** ->
+**App-Level Tokens**. It must include `connections:write`.
 
 ## AI token
 
