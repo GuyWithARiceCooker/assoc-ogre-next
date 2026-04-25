@@ -19,13 +19,11 @@
 #include "OgreArchiveManager.h"
 #include "OgreCamera.h"
 #include "OgreFileSystemLayer.h"
-#include "OgreItem.h"
 #include "OgreLight.h"
 #include "OgreLogManager.h" // LML_* (OgreLog)
 #include "OgreResourceGroupManager.h"
 #include "OgreRoot.h"
 #include "OgreSceneNode.h"
-#include "OgreTimer.h"
 #include "OgreWindow.h"
 #include "OgreWindowEventUtilities.h"
 
@@ -109,6 +107,21 @@ static Ogre::v1::TextAreaOverlayElement* addYellowLine( Ogre::v1::OverlayManager
     ta->setColour( Ogre::ColourValue( 1.0f, 0.88f, 0.15f, 1.0f ) );
     ta->setCaption( text );
     ta->setPosition( 0.04f, yNorm );
+    panel->addChild( ta );
+    return ta;
+}
+
+static Ogre::v1::TextAreaOverlayElement* addYellowText( Ogre::v1::OverlayManager& om,
+    Ogre::v1::OverlayContainer* panel, Ogre::String const& name, Ogre::String const& text,
+    float xNorm, float yNorm, float charHeight )
+{
+    Ogre::v1::TextAreaOverlayElement* ta = static_cast<Ogre::v1::TextAreaOverlayElement*>(
+        om.createOverlayElement( "TextArea", name ) );
+    ta->setFontName( "DebugFont" );
+    ta->setCharHeight( charHeight );
+    ta->setColour( Ogre::ColourValue( 1.0f, 0.88f, 0.15f, 1.0f ) );
+    ta->setCaption( text );
+    ta->setPosition( xNorm, yNorm );
     panel->addChild( ta );
     return ta;
 }
@@ -225,19 +238,11 @@ int main( int, const char* [] )
     lightNode->attachObject( l );
     l->setDirection( Vector3( -0.2f, -0.6f, -0.4f ).normalisedCopy() );
 
-    // `Item` + mesh: a zip a `General` csoportba van téve; `AUTODETECT` az „Autodetect”
-    // csoportból indul, ezért itt explicit `General` (DEFAULT_RESOURCE_GROUP_NAME).
-    Item* const it = sm->createItem( "DebugPack/Sphere1000.mesh",
-        ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, SCENE_DYNAMIC );
-    SceneNode* const sph = sm->getRootSceneNode( SCENE_DYNAMIC )->createChildSceneNode( SCENE_DYNAMIC );
-    sph->setPosition( 0, 0, 0 );
-    sph->setScale( 0.45f, 0.45f, 0.45f );
-    sph->attachObject( it );
-
     v1::OverlayManager& ovm = v1::OverlayManager::getSingleton();
     v1::Overlay* const o = ovm.create( "assoc_o" );
     v1::OverlayContainer* const pan =
         static_cast<v1::OverlayContainer*>( ovm.createOverlayElement( "Panel", "p" ) );
+    addYellowText( ovm, pan, "assoc_center", "assoc", 0.40f, 0.42f, 0.12f );
     addYellowLine( ovm, pan, "t1", "assoc", 0.06f );
     addYellowLine( ovm, pan, "t2", "ASSOC  |  Ogre-Next  2.3", 0.10f );
     addYellowLine( ovm, pan, "t3", "a  s  s  o  c  —  Hlms + Item + sárga overlay (HUD v1)", 0.14f );
@@ -247,16 +252,10 @@ int main( int, const char* [] )
     AssocQuitListener qu;
     WindowEventUtilities::addWindowEventListener( window, &qu );
 
-    Timer* const timer = root->getTimer();
-    uint64 last = timer->getMicroseconds();
     bool done = false;
     while( !done )
     {
         WindowEventUtilities::messagePump();
-        const uint64 now = timer->getMicroseconds();
-        const float dt = (float)( ( now - last ) * 1e-6 );
-        last = now;
-        sph->yaw( Radian( 0.6f * dt ) );
         done = qu.getQuit() || !root->renderOneFrame();
     }
     WindowEventUtilities::removeWindowEventListener( window, &qu );
