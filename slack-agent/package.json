@@ -1,0 +1,19 @@
+{
+  "name": "slack-agent",
+  "version": "1.0.0",
+  "description": "Slack Socket Mode bot that replies to mentions and DMs with an AI assistant.",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "check": "node --check src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@slack/bolt": "^4.7.1",
+    "dotenv": "^17.4.2",
+    "openai": "^6.34.0"
+  }
+}
