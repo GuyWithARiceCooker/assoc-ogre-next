@@ -2,6 +2,16 @@
 build/
 cmake-build-*/
 
+# Android / Gradle
+.android-sdk/
+.tools/
+.gradle/
+android/.gradle/
+android/**/.cxx/
+android/**/build/
+android/local.properties
+android/third_party/
+
 # Ogre futás (CWD = build/): generált config + log
 **/ogre-next.cfg
 **/Ogre-next.log
