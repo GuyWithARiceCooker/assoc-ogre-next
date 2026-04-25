@@ -1,0 +1,22 @@
+# =============================================================================
+# Ogre-Next: dinamikus pluginok (RenderSystem, ParticleFX) — CMake generálja
+# =============================================================================
+#
+# A `PluginFolder` a dylib-ek könyvtára. macOS: a forráskódban a Win/Linux
+# eléri automatikus perjelet, Apple-on NEM, ezért kell a záró `/`, különben
+# `.../lib` + `RenderSystem_Metal` = `.../libRenderSystem_Metal` hibás ugrás.
+#
+# A rövid nevek (`RenderSystem_Metal` stb.) a mintaprojektekben a Linux `.so.MAJOR.MINOR.PATCH`
+# elnevezést célozzák. macOS alatt a tényleges fájlok `libRenderSystem_*.dylib` —
+# a `DynLib` csak a `.dylib` kiterjesztést toldja; a `lib` előtagot nem, ezért
+# a plugins.cfg-ben a teljes törzs: `libRenderSystem_Metal` stb.
+#
+# `PluginOptional`: Rendszer(ek) próbálkozás (Metal, majd GL3+); a kötelező
+# `Plugin=libPlugin_ParticleFX` a részecskerendszer, az Item/mesh műveletek
+# függetlenül is elindulhatnak, de a minta ilyen a motor telepítéséből.
+# =============================================================================
+
+PluginFolder=@OGRE_NEXT_SDK@/lib/
+PluginOptional=libRenderSystem_Metal
+PluginOptional=libRenderSystem_GL3Plus
+Plugin=libPlugin_ParticleFX

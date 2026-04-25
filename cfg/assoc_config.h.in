@@ -1,0 +1,12 @@
+/* CMake @ONLY: abszolút útvonalak — a forrás Hlms zip + archívum útvonalakat ebből építi,
+   nem globális resources szkriptre, hanem `ArchiveManager` + `registerAssocHlms` hívásokra. */
+#ifndef ASSOC_ASSOC_CONFIG_H
+#define ASSOC_ASSOC_CONFIG_H
+
+/* `Samples/Media`: Hlms fák (Unlit/PBS) — a `FileSystem` archívumok gyökere. */
+#define ASSOC_OGRE_NEXT_MEDIA_ROOT "@OGRE_NEXT_MEDIA@"
+
+/* Telepített SDK: `Media/packs/DebugPack.zip` (mesh, DebugFont) stb. */
+#define ASSOC_OGRE_NEXT_SDK "@OGRE_NEXT_SDK@"
+
+#endif

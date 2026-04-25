@@ -1,0 +1,11 @@
+# CMake / helyi build
+build/
+cmake-build-*/
+
+# Ogre futás (CWD = build/): generált config + log
+**/ogre-next.cfg
+**/Ogre-next.log
+**/Ogre.log
+
+.DS_Store
+*.dSYM/
