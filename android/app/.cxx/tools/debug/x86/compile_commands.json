@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/workspace/android/app/.cxx/Debug/6v4vp331/x86",
+  "command": "/workspace/.android-sdk/ndk/28.2.13676358/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=i686-none-linux-android23 --sysroot=/workspace/.android-sdk/ndk/28.2.13676358/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Dassoc_android_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++17 -Wall -Wextra -Werror -fno-limit-debug-info  -fPIC -o CMakeFiles/assoc_android.dir/assoc_android.cpp.o -c /workspace/android/app/src/main/cpp/assoc_android.cpp",
+  "file": "/workspace/android/app/src/main/cpp/assoc_android.cpp"
+}
+]
