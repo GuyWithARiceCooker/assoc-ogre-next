@@ -1,6 +1,6 @@
 #include <jni.h>
 
-#include <GLES3/gl3.h>
+#include <GLES2/gl2.h>
 #include <android/log.h>
 
 #include <cmath>
@@ -11,6 +11,9 @@ constexpr char kLogTag[] = "assoc-android";
 GLuint gProgram = 0u;
 GLuint gVbo = 0u;
 GLint gTimeUniform = -1;
+GLint gPositionAttrib = -1;
+GLint gColorAttrib = -1;
+bool gLoggedFirstFrame = false;
 
 GLuint compileShader( GLenum type, char const* source )
 {
@@ -34,11 +37,10 @@ GLuint compileShader( GLenum type, char const* source )
 GLuint linkProgram()
 {
     char const* vertexShader = R"GLSL(
-        #version 300 es
-        layout(location = 0) in vec2 aPosition;
-        layout(location = 1) in vec3 aColor;
+        attribute vec2 aPosition;
+        attribute vec3 aColor;
         uniform float uTime;
-        out vec3 vColor;
+        varying vec3 vColor;
         void main()
         {
             float c = cos(uTime);
@@ -50,13 +52,11 @@ GLuint linkProgram()
     )GLSL";
 
     char const* fragmentShader = R"GLSL(
-        #version 300 es
         precision mediump float;
-        in vec3 vColor;
-        out vec4 fragColor;
+        varying vec3 vColor;
         void main()
         {
-            fragColor = vec4(vColor, 1.0);
+            gl_FragColor = vec4(vColor, 1.0);
         }
     )GLSL";
 
@@ -101,6 +101,11 @@ Java_hu_assoc_next_MainActivity_nativeInit( JNIEnv*, jclass )
 
     gProgram = linkProgram();
     gTimeUniform = glGetUniformLocation( gProgram, "uTime" );
+    gPositionAttrib = glGetAttribLocation( gProgram, "aPosition" );
+    gColorAttrib = glGetAttribLocation( gProgram, "aColor" );
+    __android_log_print( ANDROID_LOG_INFO, kLogTag,
+        "nativeInit program=%u time=%d pos=%d color=%d gl=%s", gProgram, gTimeUniform,
+        gPositionAttrib, gColorAttrib, reinterpret_cast<char const*>( glGetString( GL_VERSION ) ) );
 
     // x, y, r, g, b
     constexpr GLfloat vertices[] = {
@@ -127,18 +132,33 @@ Java_hu_assoc_next_MainActivity_nativeRender( JNIEnv*, jclass, jfloat timeSecond
     {
         Java_hu_assoc_next_MainActivity_nativeInit( nullptr, nullptr );
     }
+    if( !gProgram )
+    {
+        glClearColor( 1.0f, 0.0f, 1.0f, 1.0f );
+        glClear( GL_COLOR_BUFFER_BIT );
+        return;
+    }
 
     const float pulse = 0.5f + 0.5f * std::sin( timeSeconds );
-    glClearColor( 0.03f, 0.04f + 0.03f * pulse, 0.09f, 1.0f );
+    glClearColor( 0.05f, 0.18f + 0.15f * pulse, 0.35f, 1.0f );
     glClear( GL_COLOR_BUFFER_BIT );
 
     glUseProgram( gProgram );
     glUniform1f( gTimeUniform, timeSeconds * 0.8f );
     glBindBuffer( GL_ARRAY_BUFFER, gVbo );
-    glEnableVertexAttribArray( 0 );
-    glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof( GLfloat ), nullptr );
-    glEnableVertexAttribArray( 1 );
-    glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof( GLfloat ),
+    glEnableVertexAttribArray( static_cast<GLuint>( gPositionAttrib ) );
+    glVertexAttribPointer( static_cast<GLuint>( gPositionAttrib ), 2, GL_FLOAT, GL_FALSE,
+        5 * sizeof( GLfloat ), nullptr );
+    glEnableVertexAttribArray( static_cast<GLuint>( gColorAttrib ) );
+    glVertexAttribPointer( static_cast<GLuint>( gColorAttrib ), 3, GL_FLOAT, GL_FALSE,
+        5 * sizeof( GLfloat ),
         reinterpret_cast<void*>( 2 * sizeof( GLfloat ) ) );
     glDrawArrays( GL_TRIANGLES, 0, 3 );
+
+    if( !gLoggedFirstFrame )
+    {
+        gLoggedFirstFrame = true;
+        __android_log_print( ANDROID_LOG_INFO, kLogTag, "rendered first frame, glError=0x%x",
+            glGetError() );
+    }
 }

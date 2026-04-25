@@ -52,7 +52,7 @@ public final class MainActivity extends Activity {
     private static final class AssocSurfaceView extends GLSurfaceView {
         AssocSurfaceView(Context context) {
             super(context);
-            setEGLContextClientVersion(3);
+            setEGLContextClientVersion(2);
             setRenderer(new AssocRenderer());
             setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         }
