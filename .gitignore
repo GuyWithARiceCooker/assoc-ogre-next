@@ -9,3 +9,7 @@ cmake-build-*/
 
 .DS_Store
 *.dSYM/
+
+# Node / Slack bot local files
+node_modules/
+.env
